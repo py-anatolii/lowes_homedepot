@@ -10,7 +10,7 @@ import time
 import math
 import os
 
-from google_map_api import find_unique_stores
+from .google_map_api import find_unique_stores
 
 def setup_driver():
     options = webdriver.ChromeOptions()
@@ -210,18 +210,17 @@ def scrape_page_data(driver):
     
     return price_list, brand_list
 
-def main():
-    google_map_api_key = "AIzaSyBHowR4jBoxko0KCCd_3bz0gO5y2UArRW0"
+def lowes_scraper(zip_code, radius, key_word):
+    print(zip_code)
     
-    zip_code = "85041"
-    key_word = "impact driver"
-    radius = 50000  # radius in meters
+    # zip_code = "85041"
+    # key_word = "impact driver"
+    # radius = 50000  # radius in meters
 
     website = f"https://www.lowes.com/search?searchTerm={key_word}"
     csv_filename = 'lowes_prices_and_brands.csv'
 
-    filtered_stores = find_unique_stores(google_map_api_key, zip_code, radius)["Lowe's"]
-    print(f"Total stores within {radius/1000} km: {len(filtered_stores)}")
+    filtered_stores = find_unique_stores(zip_code, int(radius))["Lowe's"]
     
     driver = setup_driver()
     driver.get(website)
@@ -229,12 +228,17 @@ def main():
     store_list, store_no_list, store_distance_list = extract_store_data(driver, filtered_stores)
     print(store_no_list)
 
+    results = []
     for store, store_no, store_distance in zip(store_list, store_no_list, store_distance_list):
         print(store)
         select_one_store(driver, store_no)
-        scrape_one_store(driver, website, csv_filename, store, store_distance)
+        store_result = scrape_one_store(driver, website, csv_filename, store, store_distance)
+        results.append({
+            'store': store,
+            'store_no': store_no,
+            'store_distance': store_distance,
+            'result': store_result
+        })
     
     driver.quit()
-
-if __name__ == "__main__":
-    main()
+    return results

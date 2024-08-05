@@ -9,7 +9,7 @@ import time
 import math
 import os
 
-from google_map_api import find_unique_stores
+from .google_map_api import find_unique_stores
 
 def setup_driver():
     options = webdriver.ChromeOptions()
@@ -173,28 +173,33 @@ def scrape_page_data(driver):
     except Exception as e:
         return [], []
 
-def main():
-    google_map_api_key = "AIzaSyBHowR4jBoxko0KCCd_3bz0gO5y2UArRW0"
+def home_depot_scraper(zip_code, radius, key_word):
+    print(zip_code)
     
-    zip_code = "85041"
-    key_word = "impact driver"
-    radius = 10000  # radius in meters
+    # zip_code = "85041"
+    # key_word = "impact driver"
+    # radius = 10000  # radius in meters
 
     website = f"https://www.homedepot.com/b/Tools/Pick-Up-Today/N-5yc1vZc1xyZ1z175a5/Ntk-elastic/Ntt-{key_word}?NCNI-5&sortby=bestmatch&sortorder=none"
     csv_filename = 'home_depot_prices_and_brands.csv'
 
-    filtered_stores = find_unique_stores(google_map_api_key, zip_code, radius)["Home Depot"]
+    filtered_stores = find_unique_stores(zip_code, int(radius))["Home Depot"]
     print(f"Total stores within {radius/1000} km: {len(filtered_stores)}")
     
     driver = setup_driver()
     driver.get(website)
 
+    results = []
     for store in filtered_stores:
         print(store["store"])
         select_one_store(driver, store["store"])
-        scrape_one_store(driver, website, csv_filename, store["store"], store["distance"])
+        store_result = scrape_one_store(driver, website, csv_filename, store["store"], store["distance"])
+        results.append({
+            'store': store["store"],
+            'stire_no': '',
+            'distance': store["distance"],
+            'result': store_result
+        })
     
     driver.quit()
-
-if __name__ == "__main__":
-    main()
+    return results

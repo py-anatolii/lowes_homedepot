@@ -1,1 +1,13 @@
+# Ignore Python virtual environments
 .venv/
+
+# Ignore Python cache files
+app/__pycache__/
+app/api/__pycache__/
+app/api/api_v1/__pycache__/
+app/api/api_v1/routes/__pycache__/
+app/modes/__pycache__/
+app/scrapers/__pycache__/
+
+# Ignore environment variables files
+.env

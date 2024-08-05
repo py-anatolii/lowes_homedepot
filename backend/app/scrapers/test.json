@@ -1,0 +1,60 @@
+{
+  "Lowe's": [
+    {
+      "store": "Lowe's Home Improvement, 2929 W Thunderbird Rd, Phoenix",
+      "distance": "27.7 km"
+    },
+    {
+      "store": "Lowe's Home Improvement, 4300 S Arizona Ave, Chandler",
+      "distance": "48.3 km"
+    },
+    {
+      "store": "Lowe's Home Improvement, 8497 W Thunderbird Rd, Peoria",
+      "distance": "41.5 km"
+    },
+    {
+      "store": "Lowe's Home Improvement, 777 E Baseline Rd, Tempe",
+      "distance": "26.0 km"
+    },
+    {
+      "store": "Lowe's Home Improvement, 7950 E McDowell Rd, Scottsdale",
+      "distance": "32.4 km"
+    },
+    {
+      "store": "Lowe's Home Improvement, 5809 W Northern Ave, Glendale",
+      "distance": "22.9 km"
+    }
+  ],
+  "Home Depot": [
+    { "store": "Home Depot, 13760 W Bell Rd, Surprise", "distance": "49.6 km" },
+    {
+      "store": "Home Depot, 5902 W Peoria Ave, Glendale",
+      "distance": "30.5 km"
+    },
+    { "store": "Home Depot, 4848 N 43rd Ave, Phoenix", "distance": "17.1 km" },
+    { "store": "Home Depot, 3609 E Thomas Rd, Phoenix", "distance": "21.0 km" },
+    {
+      "store": "Home Depot, 6160 W Behrend Dr, Glendale",
+      "distance": "41.0 km"
+    },
+    {
+      "store": "Home Depot, Home Depot, 1740 S Country Club Dr, Mesa",
+      "distance": "33.2 km"
+    },
+    { "store": "Home Depot, 1330 W Baseline Rd, Tempe", "distance": "15.5 km" },
+    { "store": "Home Depot, 9201 W Peoria Ave, Peoria", "distance": "37.7 km" },
+    {
+      "store": "Home Depot, 7333 W McDowell Rd, Phoenix",
+      "distance": "19.7 km"
+    },
+    {
+      "store": "Home Depot, 6838 E Superstition Springs Blvd, Mesa",
+      "distance": "47.7 km"
+    },
+    {
+      "store": "Home Depot, 9969 W Camelback Rd, Phoenix",
+      "distance": "29.4 km"
+    },
+    { "store": "Home Depot, 2217 E Bell Rd, Phoenix", "distance": "40.1 km" }
+  ]
+}
