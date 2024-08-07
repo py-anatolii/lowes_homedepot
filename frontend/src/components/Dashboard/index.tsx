@@ -11,20 +11,20 @@ import { useNotification } from "@/context/NotificationContext";
 import useData from "@/hooks/useData";
 
 export default function Dashboard() {
-  const [searhPaylod, setSearchPayload] = useState<SearchPayload>({
+  const [searchPayload, setSearchPayload] = useState<SearchPayload>({
     zipCode: "",
     radius: "",
     keyWord: "",
   });
   const [page, setPage] = useState<number>(1);
-  const [per_page, setPerPage] = useState<number>(20);
+  const [perPage, setPerPage] = useState<number>(20);
 
   const { setSuccessMessage, setErrorMessage } = useNotification();
 
   const { data, error, loading, fetchData } = useData({
     method: "post",
     url: "/products/search",
-    requestBody: searhPaylod,
+    requestBody: searchPayload,
   });
 
   const changeSearchPayload = (payload: SearchPayload) => {
@@ -35,41 +35,50 @@ export default function Dashboard() {
     });
   };
 
-  const pageControl = ({
-    page,
-    per_page,
-  }: {
-    page: number;
-    per_page: number;
-  }) => {
+  const pageControl = ({ page, per_page }: { page: number; per_page: number }) => {
     setPage(page);
     setPerPage(per_page);
   };
+
+  useEffect(() => {
+    if (data && !loading) {
+      setSuccessMessage(data?.message);
+    }
+
+    if (error) {
+      setErrorMessage("Failed to fetch data!");
+    }
+  }, [data, error, loading, setSuccessMessage, setErrorMessage]);
+
+  const handleOnClick = () => {
+    if (searchPayload.radius !== "" && searchPayload.zipCode !== "" && searchPayload.keyWord !== "") {
+      fetchData();
+    } else {
+      setErrorMessage("Please set all fields.");
+    }
+  };
+
   return (
     <div>
-      <div className="flex w-[50%] items-center gap-5 mt-8 ml-5">
+      <div className="flex w-[50%] gap-5 mt-8 ml-5">
         <SearchInput
-          searchPayload={searhPaylod}
+          searchPayload={searchPayload}
           changeSearchPayload={changeSearchPayload}
         />
-        <SearchButton onClick={fetchData} />
+        <SearchButton onClick={handleOnClick} loading={loading} />
       </div>
       <div className="flex gap-5 mt-5">
         <SelectStores
-          searchPayload={searhPaylod}
+          searchPayload={searchPayload}
           changeSearchPayload={changeSearchPayload}
         />
         <div className="w-full">
-          <div className="mt-4">
-            <span className="font-bold text-sm">Total Counts:</span>{" "}
-            {/* <span className="text-sm">{data?.totalCount}</span> */}
-          </div>
           <div className="mt-5">
-            <ProductTable />
+            <ProductTable loading={loading} />
           </div>
-          <div className="mt-5 pb-5 flex w-full justify-center">
+          {/* <div className="mt-5 pb-5 flex w-full justify-center">
             <Pagination totalPages={10} pageControl={pageControl} />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

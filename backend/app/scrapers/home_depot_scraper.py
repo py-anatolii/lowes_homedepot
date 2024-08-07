@@ -44,7 +44,6 @@ def click_second_toggle_button(driver):
     if len(buttons) >= 2:
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable(buttons[1]))
         buttons[1].click()
-        print("Second toggle button clicked successfully!")
     else:
         print("Less than two buttons found with the given selector.")
     time.sleep(1)
@@ -55,10 +54,8 @@ def click_close_button(driver):
     )
     close_button.click()
 
-def scroll_down(driver, scroll_height=1000, scroll_times=10):
-    for i in range(scroll_times):
-        driver.execute_script(f"window.scrollBy(0, {scroll_height})")
-        time.sleep(1)
+def scroll_down(driver):
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         
 def open_search_modal(driver):
     open_modal_button = WebDriverWait(driver, 10).until(
@@ -92,7 +89,6 @@ def select_one_store(driver, store):
         
         set_store_button.click()
 
-        print(f"Store number {store} not found.")
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -100,9 +96,10 @@ def select_one_store(driver, store):
 
 def scrape_one_store(driver, website, csv_filename, store, store_distance):
     total_results = get_total_results(driver)
-    print(f"Total results: {total_results}")
 
-    paginate_and_scrape(driver, website, total_results, csv_filename, store, store_distance)
+    prices, brands, stocks, stores, distances = paginate_and_scrape(driver, website, total_results, csv_filename, store, store_distance)
+    
+    return prices, brands, stocks, stores, distances
     
 def get_total_results(driver):
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'span.results-applied__primary-filter-label')))
@@ -116,27 +113,34 @@ def paginate_and_scrape(driver, url, total_results, csv_filename, store, store_d
     items_per_page = 24
     pages = math.ceil(total_results / items_per_page)
     
-    if not os.path.exists(csv_filename):
-        save_to_csv(csv_filename, [], [], [], [], headers=True)
+    # if not os.path.exists(csv_filename):
+    #     save_to_csv(csv_filename, [], [], [], [], headers=True)
+    
+    all_prices = []
+    all_brands = []
+    all_stocks = []
+    all_stores = []
+    all_distances = []
     
     for i in range(1, pages + 1):
         driver.get(f"{url}&Nao={(i - 1) * items_per_page}")
-        prices, brands = scrape_page_data(driver)
-        stores = [store] * len(prices)
-        distances = [store_distance] * len(prices)
-
-        print(f"Page {i} prices: {prices}")
-        print(f"Page {i} brands: {brands}")
-        print(f"Total prices collected: {len(prices)}")
-        print(f"Total brands collected: {len(brands)}")
+        prices, brands, stocks = scrape_page_data(driver)
         
-        save_to_csv(csv_filename, prices, brands, stores, distances, headers=False)
+        all_prices.extend(prices)
+        all_brands.extend(brands)
+        all_stocks.extend(stocks)
+        all_stores.extend([store] * len(prices))
+        all_distances.extend([store_distance] * len(prices))
+
+        # save_to_csv(csv_filename, prices, brands, stores, distances, headers=False)
 
         time.sleep(1)
         
-def save_to_csv(filename, prod_price, prod_brand, prod_store, prod_distance, headers=False):
-    df = pd.DataFrame({'price': prod_price, 'brand': prod_brand, 'store': prod_store, 'distance': prod_distance})
-    df.to_csv(filename, mode='a', header=headers, index=False)
+    return all_prices, all_brands, all_stocks, all_stores, all_distances
+        
+# def save_to_csv(filename, prod_price, prod_brand, prod_store, prod_distance, headers=False):
+#     df = pd.DataFrame({'price': prod_price, 'brand': prod_brand, 'store': prod_store, 'distance': prod_distance})
+#     df.to_csv(filename, mode='a', header=headers, index=False)
         
 def scrape_page_data(driver):
     try:
@@ -148,9 +152,9 @@ def scrape_page_data(driver):
 
         price_list = []
         brand_list = []
+        stock_list = []
 
         products = results.find_elements(By.CSS_SELECTOR, 'div[data-testid="product-pod"]')
-        print(f"Number of products found: {len(products)}")
 
         for product in products:
             try:
@@ -164,42 +168,44 @@ def scrape_page_data(driver):
                 brand = brand_element.text.strip()
             except Exception as e:
                 brand = ''
+
+            try:
+                stock_element = product.find_element(By.CSS_SELECTOR, 'span.store__success')
+                stock_text = stock_element.text.strip()
+                stock_number = stock_text.split()[0]
+            except Exception as e:
+                stock_number = '1'
             
             price_list.append(price)
             brand_list.append(brand)
+            stock_list.append(stock_number)
         
-        return price_list, brand_list
+        return price_list, brand_list, stock_list
 
     except Exception as e:
-        return [], []
+        return [], [], []
 
 def home_depot_scraper(zip_code, radius, key_word):
-    print(zip_code)
-    
-    # zip_code = "85041"
-    # key_word = "impact driver"
-    # radius = 10000  # radius in meters
+    print("homedepot")
 
     website = f"https://www.homedepot.com/b/Tools/Pick-Up-Today/N-5yc1vZc1xyZ1z175a5/Ntk-elastic/Ntt-{key_word}?NCNI-5&sortby=bestmatch&sortorder=none"
     csv_filename = 'home_depot_prices_and_brands.csv'
 
     filtered_stores = find_unique_stores(zip_code, int(radius))["Home Depot"]
-    print(f"Total stores within {radius/1000} km: {len(filtered_stores)}")
     
     driver = setup_driver()
     driver.get(website)
 
     results = []
+
     for store in filtered_stores:
-        print(store["store"])
         select_one_store(driver, store["store"])
-        store_result = scrape_one_store(driver, website, csv_filename, store["store"], store["distance"])
-        results.append({
-            'store': store["store"],
-            'stire_no': '',
-            'distance': store["distance"],
-            'result': store_result
-        })
+        prices, brands, stocks, stores, distances = scrape_one_store(driver, website, csv_filename, store["store"], store["distance"])
+        print("Home Depot", prices)
+        results.extend([
+            {"price": price, "brand": brand, "stock": stock, "store": store, "distance": distance}
+            for price, brand, stock, store, distance in zip(prices, brands, stocks, stores, distances)
+        ])
     
     driver.quit()
     return results

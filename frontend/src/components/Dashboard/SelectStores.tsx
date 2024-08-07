@@ -98,7 +98,7 @@ const SelectStores: React.FC<SelectStoresProps> = (props) => {
           <li>
             <div className=""></div>
           </li>
-          <li>
+          {/* <li>
             <div className="flex items-center border-t pt-4">
               <div className="flex items-center h-6">
                 <input
@@ -289,7 +289,7 @@ const SelectStores: React.FC<SelectStoresProps> = (props) => {
                 </ul>
               </li>
             </ul>
-          </li>
+          </li> */}
         </ul>
       </div>
     </div>
