@@ -1,13 +1,16 @@
 "use client";
 
 import React from "react";
+import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Header() {
+  const router = useRouter()
 
   const handleSignOut = () =>{
     localStorage.setItem('token', '');
+    router.push('/auth/login');
   }
   
   return (
