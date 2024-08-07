@@ -143,9 +143,9 @@ def select_one_store(driver, store_no):
 def scrape_one_store(driver, website, csv_filename, store, store_distance):
     total_results = get_total_results(driver)
 
-    prices, brands, stocks, stores, distances = paginate_and_scrape(driver, website, total_results, csv_filename, store, store_distance)
+    prices, brands, stocks, names, stores, distances = paginate_and_scrape(driver, website, total_results, csv_filename, store, store_distance)
     
-    return prices, brands, stocks, stores, distances
+    return prices, brands, stocks, names, stores, distances
     
 def get_total_results(driver):
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'p.results')))
@@ -165,23 +165,25 @@ def paginate_and_scrape(driver, url, total_results, csv_filename, store, store_d
     all_prices = []
     all_brands = []
     all_stocks = []
+    all_names = []
     all_stores = []
     all_distances = []
     
     for i in range(1, pages + 1):
         driver.get(f"{url}&offset={(i - 1) * items_per_page}")
         click_second_toggle_button(driver)
-        prices, brands, stocks = scrape_page_data(driver)
+        prices, brands, stocks, names = scrape_page_data(driver)
         
         all_prices.extend(prices)
         all_brands.extend(brands)
         all_stocks.extend(stocks)
+        all_names.extend(names)
         all_stores.extend([store] * len(prices))
         all_distances.extend([store_distance] * len(prices))
         
         time.sleep(1)
         
-    return all_prices, all_brands, all_stocks, all_stores, all_distances
+    return all_prices, all_brands, all_stocks, all_names, all_stores, all_distances
 
         # save_to_csv(csv_filename, prices, brands, stores, distances, headers=False)
         
@@ -197,6 +199,7 @@ def scrape_page_data(driver):
     price_list = []
     brand_list = []
     stock_list = []
+    product_name_list = []
 
     products = driver.find_elements(By.CSS_SELECTOR, 'div.sc-o9wle2-4')
     for product in products:
@@ -211,6 +214,12 @@ def scrape_page_data(driver):
             brand = ''
 
         try:
+            product_name_full = product.find_element(By.CSS_SELECTOR, 'span.description-spn').text.strip()
+            product_name = product_name_full.split(' (')[0]
+        except:
+            product_name = ''
+
+        try:
             stock_spans = product.find_elements(By.CSS_SELECTOR, 'span.Fulfilmentstyles__GreenWrapper-sc-5biurv-4.kGYIzw')
             stock_number = None
             for span in stock_spans:
@@ -219,15 +228,16 @@ def scrape_page_data(driver):
                     stock_number = text.split()[0]
                     break
             if stock_number is None:
-                stock_number = '1'
+                stock_number = ''
         except:
-            stock_number = '1'
+            stock_number = ''
         
         price_list.append(price)
         brand_list.append(brand)
         stock_list.append(stock_number)
+        product_name_list.append(product_name)
     
-    return price_list, brand_list, stock_list
+    return price_list, brand_list, stock_list, product_name_list
 
 def lowes_scraper(zip_code, radius, key_word):
     print("lowes")
@@ -250,11 +260,11 @@ def lowes_scraper(zip_code, radius, key_word):
     
     for store, store_no, store_distance in zip(store_list, store_no_list, store_distance_list):
         select_one_store(driver, store_no)
-        prices, brands, stocks, stores, distances = scrape_one_store(driver, website, csv_filename, store, store_distance)
+        prices, brands, stocks, names, stores, distances = scrape_one_store(driver, website, csv_filename, store, store_distance)
         print("Lowes: ", prices)
         results.extend([
-            {"price": price, "brand": brand, "stock": stock, "store": store, "distance": distance}
-            for price, brand, stock, store, distance in zip(prices, brands, stocks, stores, distances)
+            {"price": price, "brand": brand, "stock": stock, "name": name, "store": store, "distance": distance}
+            for price, brand, stock, name, store, distance in zip(prices, brands, stocks, names, stores, distances)
         ])
     
     driver.quit()

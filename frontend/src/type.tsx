@@ -9,23 +9,22 @@ export interface Product {
   stock: string;
   id: number;
   distance: string;
+  name: string;
   price: string;
   brand: string;
 };
 
-export interface PriceEntry {
-  price: string; 
-  stock: string; 
+interface PriceDetails {
+  price: string;
+  stock: string;
 }
 
-export interface StoreData {
-  prices: PriceEntry[];
-  total: string; 
-}
-
+// PriceMatrix type
 export interface PriceMatrix {
   [brand: string]: {
-    [store: string]: StoreData;
+    [productName: string]: {
+      [store: string]: PriceDetails[];
+    };
   };
 }
 

@@ -97,9 +97,9 @@ def select_one_store(driver, store):
 def scrape_one_store(driver, website, csv_filename, store, store_distance):
     total_results = get_total_results(driver)
 
-    prices, brands, stocks, stores, distances = paginate_and_scrape(driver, website, total_results, csv_filename, store, store_distance)
+    prices, brands, stocks, names, stores, distances = paginate_and_scrape(driver, website, total_results, csv_filename, store, store_distance)
     
-    return prices, brands, stocks, stores, distances
+    return prices, brands, stocks, names, stores, distances
     
 def get_total_results(driver):
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'span.results-applied__primary-filter-label')))
@@ -119,16 +119,18 @@ def paginate_and_scrape(driver, url, total_results, csv_filename, store, store_d
     all_prices = []
     all_brands = []
     all_stocks = []
+    all_names = []
     all_stores = []
     all_distances = []
     
     for i in range(1, pages + 1):
         driver.get(f"{url}&Nao={(i - 1) * items_per_page}")
-        prices, brands, stocks = scrape_page_data(driver)
+        prices, brands, stocks, names = scrape_page_data(driver)
         
         all_prices.extend(prices)
         all_brands.extend(brands)
         all_stocks.extend(stocks)
+        all_names.extend(names)
         all_stores.extend([store] * len(prices))
         all_distances.extend([store_distance] * len(prices))
 
@@ -136,7 +138,7 @@ def paginate_and_scrape(driver, url, total_results, csv_filename, store, store_d
 
         time.sleep(1)
         
-    return all_prices, all_brands, all_stocks, all_stores, all_distances
+    return all_prices, all_brands, all_stocks, all_names, all_stores, all_distances
         
 # def save_to_csv(filename, prod_price, prod_brand, prod_store, prod_distance, headers=False):
 #     df = pd.DataFrame({'price': prod_price, 'brand': prod_brand, 'store': prod_store, 'distance': prod_distance})
@@ -153,6 +155,7 @@ def scrape_page_data(driver):
         price_list = []
         brand_list = []
         stock_list = []
+        product_name_list = []
 
         products = results.find_elements(By.CSS_SELECTOR, 'div[data-testid="product-pod"]')
 
@@ -174,16 +177,23 @@ def scrape_page_data(driver):
                 stock_text = stock_element.text.strip()
                 stock_number = stock_text.split()[0]
             except Exception as e:
-                stock_number = '1'
+                stock_number = ''
+
+            try:
+                product_name_element = product.find_element(By.CSS_SELECTOR, 'span.sui-text-primary.sui-font-regular.sui-mb-1.sui-line-clamp-5.sui-text-ellipsis.sui-inline')
+                product_name = product_name_element.text.strip()
+            except Exception as e:
+                product_name = ''
             
             price_list.append(price)
             brand_list.append(brand)
             stock_list.append(stock_number)
+            product_name_list.append(product_name)
         
-        return price_list, brand_list, stock_list
+        return price_list, brand_list, stock_list, product_name_list
 
     except Exception as e:
-        return [], [], []
+        return [], [], [], []
 
 def home_depot_scraper(zip_code, radius, key_word):
     print("homedepot")
@@ -200,11 +210,11 @@ def home_depot_scraper(zip_code, radius, key_word):
 
     for store in filtered_stores:
         select_one_store(driver, store["store"])
-        prices, brands, stocks, stores, distances = scrape_one_store(driver, website, csv_filename, store["store"], store["distance"])
+        prices, brands, stocks, names, stores, distances = scrape_one_store(driver, website, csv_filename, store["store"], store["distance"])
         print("Home Depot", prices)
         results.extend([
-            {"price": price, "brand": brand, "stock": stock, "store": store, "distance": distance}
-            for price, brand, stock, store, distance in zip(prices, brands, stocks, stores, distances)
+            {"price": price, "brand": brand, "stock": stock, "name": name, "store": store, "distance": distance}
+            for price, brand, stock, name, store, distance in zip(prices, brands, stocks, names, stores, distances)
         ])
     
     driver.quit()

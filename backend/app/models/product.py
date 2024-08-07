@@ -12,6 +12,7 @@ class Product(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     price: str
     brand: str
+    name: str
     stock: str
     store: str
     distance: str
