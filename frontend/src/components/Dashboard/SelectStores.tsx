@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import useData from "@/hooks/useData";
 import { SearchPayload } from "@/type";
+import { MapPinIcon } from "@heroicons/react/24/outline";
 
 interface SelectStoresProps {
   searchPayload: SearchPayload;
@@ -52,20 +53,23 @@ const SelectStores: React.FC<SelectStoresProps> = (props) => {
               <div className="relative mt-3">
                 <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
                   <svg
-                    className="w-4 h-4 dark:text-gray-400"
-                    aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
                     fill="currentColor"
-                    viewBox="0 0 16 20"
+                    className="size-5"
                   >
-                    <path d="M8 0a7.992 7.992 0 0 0-6.583 12.535 1 1 0 0 0 .12.183l.12.146c.112.145.227.285.326.4l5.245 6.374a1 1 0 0 0 1.545-.003l5.092-6.205c.206-.222.4-.455.578-.7l.127-.155a.934.934 0 0 0 .122-.192A8.001 8.001 0 0 0 8 0Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" />
+                    <path
+                      fillRule="evenodd"
+                      d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
                 <input
                   type="text"
                   id="zip-input"
                   aria-describedby="helper-text-explanation"
-                  className="border border-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="border border-gray-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
                   placeholder="12345-6789"
                   pattern="^\d{5}(-\d{4})?$"
                   value={zipCode}
@@ -83,16 +87,32 @@ const SelectStores: React.FC<SelectStoresProps> = (props) => {
               >
                 Select a Radius:
               </label>
-              <input
-                type="number"
-                id="number-input"
-                aria-describedby="helper-text-explanation"
-                className="mt-3 border border-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="100000m"
-                value={radius}
-                required
-                onChange={handleRadiusChange}
-              />
+              <div className="relative mt-3">
+                <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="size-4"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="number"
+                  id="number-input"
+                  aria-describedby="helper-text-explanation"
+                  className="border border-gray-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                  placeholder="100000m"
+                  value={radius}
+                  required
+                  onChange={handleRadiusChange}
+                />
+              </div>
             </form>
           </li>
           <li>
@@ -106,7 +126,7 @@ const SelectStores: React.FC<SelectStoresProps> = (props) => {
                   aria-describedby="helper-checkbox-text"
                   type="checkbox"
                   value=""
-                  className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-5 h-5 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
               </div>
               <div className="ms-2">
@@ -127,7 +147,7 @@ const SelectStores: React.FC<SelectStoresProps> = (props) => {
                           aria-describedby="helper-checkbox-text"
                           type="checkbox"
                           value=""
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                         />
                       </div>
                       <div className="ms-2 text-sm">
@@ -154,7 +174,7 @@ const SelectStores: React.FC<SelectStoresProps> = (props) => {
                           aria-describedby="helper-checkbox-text"
                           type="checkbox"
                           value=""
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                         />
                       </div>
                       <div className="ms-2 text-sm">
@@ -181,7 +201,7 @@ const SelectStores: React.FC<SelectStoresProps> = (props) => {
                           aria-describedby="helper-checkbox-text"
                           type="checkbox"
                           value=""
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                         />
                       </div>
                       <div className="ms-2 text-sm">
@@ -213,7 +233,7 @@ const SelectStores: React.FC<SelectStoresProps> = (props) => {
                           aria-describedby="helper-checkbox-text"
                           type="checkbox"
                           value=""
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                         />
                       </div>
                       <div className="ms-2 text-sm">
@@ -240,7 +260,7 @@ const SelectStores: React.FC<SelectStoresProps> = (props) => {
                           aria-describedby="helper-checkbox-text"
                           type="checkbox"
                           value=""
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                         />
                       </div>
                       <div className="ms-2 text-sm">
@@ -267,7 +287,7 @@ const SelectStores: React.FC<SelectStoresProps> = (props) => {
                           aria-describedby="helper-checkbox-text"
                           type="checkbox"
                           value=""
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                         />
                       </div>
                       <div className="ms-2 text-sm">

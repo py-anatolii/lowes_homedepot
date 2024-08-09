@@ -54,7 +54,7 @@ export default function RegisterForm() {
               className="mb-3 mt-5 block text-xs font-medium text-gray-900"
               htmlFor="username"
             >
-              Email
+              Email:
             </label>
             <div className="relative">
               <input
@@ -75,7 +75,7 @@ export default function RegisterForm() {
               className="mb-3 mt-5 block text-xs font-medium text-gray-900"
               htmlFor="password"
             >
-              Password
+              Password:
             </label>
             <div className="relative">
               <input
@@ -97,7 +97,7 @@ export default function RegisterForm() {
               className="mb-3 mt-5 block text-xs font-medium text-gray-900"
               htmlFor="password"
             >
-              Password Confirm
+              Confirm Password:
             </label>
             <div className="relative">
               <input
@@ -115,7 +115,9 @@ export default function RegisterForm() {
             </div>
           </div>
         </div>
-        <RegisterButton pending={loading} />
+        <div className="mt-6">
+          <RegisterButton pending={loading} />
+        </div>
         <div className="flex justify-center p-6">
           <Link href="/auth/login" className="flex items-center">
             <div className="flex items-center gap-2">
@@ -134,7 +136,7 @@ export default function RegisterForm() {
 function RegisterButton({ pending }: { pending: boolean }) {
   return (
     <button
-      className="mt-4 w-full flex h-10 items-center rounded-lg bg-green-500 px-4 text-sm font-medium text-white transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-green-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+      className="mt-4 w-full flex h-10 items-center rounded-lg bg-green-500 px-4 text-sm font-medium text-white transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500 active:bg-green-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
       aria-disabled={pending}
     >
       Register <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />

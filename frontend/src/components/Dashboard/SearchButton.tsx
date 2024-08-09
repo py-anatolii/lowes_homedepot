@@ -11,10 +11,10 @@ const SearchButton: React.FC<SearchButtonProps> = ({ onClick, loading }) => {
     <button
       onClick={onClick}
       disabled={loading}
-      className={`flex mt-1 h-10 items-center rounded-2xl px-4 text-sm font-medium text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${
+      className={`flex mt-1 h-10 items-center rounded-2xl px-4 text-sm font-medium text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 ${
         loading
           ? "bg-gray-400 cursor-not-allowed"
-          : "bg-green-500 hover:bg-green-400"
+          : "bg-green-500 hover:bg-green-600"
       }`}
     >
       <span className="hidden md:block">Search</span>{" "}

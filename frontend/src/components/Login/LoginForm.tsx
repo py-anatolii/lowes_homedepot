@@ -1,31 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { AtSymbolIcon, KeyIcon } from '@heroicons/react/24/outline';
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { AtSymbolIcon, KeyIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon } from "@heroicons/react/20/solid";
 
-import { useNotification } from '@/context/NotificationContext';
-import useAuth from '@/hooks/useAuth';
+import { useNotification } from "@/context/NotificationContext";
+import useAuth from "@/hooks/useAuth";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const router = useRouter();
 
   const { setSuccessMessage, setErrorMessage } = useNotification();
 
   const { data, error, loading, fetchData } = useAuth({
-    url: '/users/login',
+    url: "/users/login",
     requestData: { email, password },
   });
 
   useEffect(() => {
     if (data) {
-      localStorage.setItem('token', data?.access_token);
-      router.push('/dashboard');
+      localStorage.setItem("token", data?.access_token);
+      router.push("/dashboard");
       setSuccessMessage("Login Successfully");
     }
   }, [data]);
@@ -45,8 +45,11 @@ export default function LoginForm() {
         <h1 className="mb-3 font-bold text-2xl">Sign in</h1>
         <div className="w-full">
           <div>
-            <label className="mb-3 mt-5 block text-xs font-medium text-gray-900" htmlFor="username">
-              Email
+            <label
+              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+              htmlFor="username"
+            >
+              Email:
             </label>
             <div className="relative">
               <input
@@ -63,8 +66,11 @@ export default function LoginForm() {
             </div>
           </div>
           <div className="mt-4">
-            <label className="mb-3 mt-5 block text-xs font-medium text-gray-900" htmlFor="password">
-              Password
+            <label
+              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+              htmlFor="password"
+            >
+              Password:
             </label>
             <div className="relative">
               <input
@@ -82,12 +88,16 @@ export default function LoginForm() {
             </div>
           </div>
         </div>
-        <LoginButton pending={loading} />
-        <div className='flex justify-center p-6'>
-          <Link href='/auth/register' className='flex items-center'>
-            <div className='flex items-center gap-2'>
-              <span className='text-sm'>Not registered?</span>
-              <span className='hover:underline text-sm text-green-600'>Create a account</span>
+        <div className="mt-6">
+          <LoginButton pending={loading} />
+        </div>
+        <div className="flex justify-center p-6">
+          <Link href="/auth/register" className="flex items-center">
+            <div className="flex items-center gap-2">
+              <span className="text-sm">Not registered?</span>
+              <span className="hover:underline text-sm text-green-600">
+                Create a account
+              </span>
             </div>
           </Link>
         </div>
@@ -98,7 +108,10 @@ export default function LoginForm() {
 
 function LoginButton({ pending }: { pending: boolean }) {
   return (
-    <button className="flex h-10 items-center rounded-lg bg-green-500 px-4 text-sm font-medium text-white transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-green-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50 mt-4 w-full" aria-disabled={pending}>
+    <button
+      className="flex h-10 items-center rounded-lg bg-green-500 px-4 text-sm font-medium text-white transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500 active:bg-green-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50 mt-4 w-full"
+      aria-disabled={pending}
+    >
       Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
     </button>
   );
