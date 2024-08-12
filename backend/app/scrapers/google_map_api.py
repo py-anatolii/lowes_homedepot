@@ -87,9 +87,3 @@ def find_unique_stores(zip_code, radius):
             "Lowe's": [],
             "Home Depot": []
         }
-
-# api_key = "AIzaSyBHowR4jBoxko0KCCd_3bz0gO5y2UArRW0"
-# zip_code = "85041"
-# radius = 50000
-# stores = find_unique_stores(api_key, zip_code, radius)
-# print(stores)

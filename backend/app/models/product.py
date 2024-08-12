@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import EmailStr, Field, model_validator
+from pydantic import Field, model_validator
 from sqlmodel import Field, SQLModel
 
 class ProductSearch(SQLModel):
@@ -10,11 +10,10 @@ class ProductSearch(SQLModel):
 
 class Product(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    title: str
     price: str
     brand: str
-    name: str
     stock: str
     store: str
-    distance: str
     
     

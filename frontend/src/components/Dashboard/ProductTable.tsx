@@ -47,17 +47,17 @@ const ProductTable: React.FC<ProductTableProps> = (props) => {
       const matrix = uniqueBrands.reduce<PriceMatrix>((acc, brand) => {
         const brandProducts = data_result.filter((p) => p.brand === brand);
         acc[brand] = brandProducts.reduce<{
-          [name: string]: {
+          [title: string]: {
             [store: string]: { price: string; stock: string }[];
           };
         }>((acc2, product) => {
-          if (!acc2[product.name]) {
-            acc2[product.name] = {};
+          if (!acc2[product.title]) {
+            acc2[product.title] = {};
           }
-          if (!acc2[product.name][product.store]) {
-            acc2[product.name][product.store] = [];
+          if (!acc2[product.title][product.store]) {
+            acc2[product.title][product.store] = [];
           }
-          acc2[product.name][product.store].push({
+          acc2[product.title][product.store].push({
             price: product.price,
             stock: product.stock || "0",
           });

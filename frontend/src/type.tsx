@@ -8,8 +8,7 @@ export interface Product {
   store: string;
   stock: string;
   id: number;
-  distance: string;
-  name: string;
+  title: string;
   price: string;
   brand: string;
 };

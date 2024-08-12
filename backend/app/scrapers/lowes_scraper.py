@@ -159,9 +159,6 @@ def paginate_and_scrape(driver, url, total_results, csv_filename, store, store_d
     items_per_page = 24
     pages = math.ceil(total_results / items_per_page)
     
-    # if not os.path.exists(csv_filename):
-    #     save_to_csv(csv_filename, [], [], [], [], headers=True)
-    
     all_prices = []
     all_brands = []
     all_stocks = []
@@ -185,12 +182,6 @@ def paginate_and_scrape(driver, url, total_results, csv_filename, store, store_d
         
     return all_prices, all_brands, all_stocks, all_names, all_stores, all_distances
 
-        # save_to_csv(csv_filename, prices, brands, stores, distances, headers=False)
-        
-# def save_to_csv(filename, prod_price, prod_brand, prod_store, prod_distance, headers=False):
-#     df = pd.DataFrame({'price': prod_price, 'brand': prod_brand, 'store': prod_store, 'distance': prod_distance})
-#     df.to_csv(filename, mode='a', header=headers, index=False)
-        
 def scrape_page_data(driver):
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'pl')))
     
@@ -242,10 +233,6 @@ def scrape_page_data(driver):
 def lowes_scraper(zip_code, radius, key_word):
     print("lowes")
     
-    # zip_code = "85041"
-    # key_word = "impact driver"
-    # radius = 50000  # radius in meters
-
     website = f"https://www.lowes.com/search?searchTerm={key_word}"
     csv_filename = 'lowes_prices_and_brands.csv'
 

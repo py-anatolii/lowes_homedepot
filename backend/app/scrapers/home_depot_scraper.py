@@ -113,9 +113,6 @@ def paginate_and_scrape(driver, url, total_results, csv_filename, store, store_d
     items_per_page = 24
     pages = math.ceil(total_results / items_per_page)
     
-    # if not os.path.exists(csv_filename):
-    #     save_to_csv(csv_filename, [], [], [], [], headers=True)
-    
     all_prices = []
     all_brands = []
     all_stocks = []
@@ -134,15 +131,9 @@ def paginate_and_scrape(driver, url, total_results, csv_filename, store, store_d
         all_stores.extend([store] * len(prices))
         all_distances.extend([store_distance] * len(prices))
 
-        # save_to_csv(csv_filename, prices, brands, stores, distances, headers=False)
-
         time.sleep(1)
         
     return all_prices, all_brands, all_stocks, all_names, all_stores, all_distances
-        
-# def save_to_csv(filename, prod_price, prod_brand, prod_store, prod_distance, headers=False):
-#     df = pd.DataFrame({'price': prod_price, 'brand': prod_brand, 'store': prod_store, 'distance': prod_distance})
-#     df.to_csv(filename, mode='a', header=headers, index=False)
         
 def scrape_page_data(driver):
     try:
