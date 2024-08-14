@@ -101,7 +101,7 @@ class LowesScraper:
                         'brand': brand,
                         'price': price,
                         'stock': stock_quantity.split()[0],
-                        "store": expected_store_name,
+                        "store": expected_store_name + " (L)",
                     })
                 except AttributeError as e:
                     continue
@@ -118,17 +118,57 @@ class LowesScraper:
         else:
             print("Less than two buttons found with the given selector.")
 
+    def select_one_store(self, store_num):
+        try:
+            my_store_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "a[data-linkid='selected-store']"))
+            )
+            my_store_button.click()
+
+            store_search_input = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.XPATH, "//input[@placeholder='ZIP Code, City, State or Store #']"))
+            )
+            store_search_input.click()
+            store_search_input.send_keys(Keys.CONTROL + "a")
+            store_search_input.send_keys(Keys.BACKSPACE)
+            store_search_input.send_keys(store_num)
+
+            search_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "button.rightArrowBtn"))
+            )
+            search_button.click()
+            time.sleep(1)
+
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, "button[data-storenumber]"))
+            )
+            set_my_store_button = self.driver.find_element(By.CSS_SELECTOR, "button[data-storenumber]")
+            set_my_store_button.click()
+            time.sleep(5)
+        except Exception as e:
+            print(f"Error selecting store: {e}")
+
     def quit(self):
         if self.driver:
             self.driver.quit()
 
     def scrape_all_pages(self, key_word, store_num, expected_store_name, products_per_page=24):
-        base_url = f"https://www.lowes.com/search?storeId={store_num}&searchTerm={key_word}"
+        base_url = f"https://www.lowes.com/search?searchTerm={key_word}"
         self.driver.get(f"{base_url}&inStock=1&rollUpVariants=0")
         self.toggle_button_click()
+
         time.sleep(5)
+        
         page_content = self.driver.page_source
         self.soup = BeautifulSoup(page_content, 'lxml')
+
+        current_store_name = self.soup.find('span', class_="store-info-wrapper").text.strip()
+        print(current_store_name)
+        
+        if store_num and current_store_name != expected_store_name:
+            self.select_one_store(store_num)
+
+        time.sleep(5)
         total_products = self.get_total_products()
         total_pages = self.get_total_pages(total_products, products_per_page)
         print(f"Total Products: {total_products}")
@@ -198,8 +238,8 @@ if __name__ == "__main__":
     stores = []
     scraper = LowesScraper()
 
-    all_stores = scraper.scrape_all_store_infos(stores)
-    print(all_stores)
+    # all_stores = scraper.scrape_all_store_infos(stores)
+    # print(all_stores)
 
     all_product_details = scraper.scrape_all_pages(key_word, store_num, expected_store_name)
     

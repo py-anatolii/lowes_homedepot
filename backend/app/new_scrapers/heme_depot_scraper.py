@@ -107,7 +107,7 @@ class HomeDepotScraper:
                         'brand': brand,
                         'price': price,
                         'stock': stock_quantity.split()[0],
-                        'store': expected_store_name,
+                        'store': expected_store_name + " (H)",
                     })
                 except AttributeError as e:
                     continue
