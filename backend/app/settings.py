@@ -6,14 +6,6 @@ from pydantic_settings import BaseSettings
 
 load_dotenv()
 
-def get_url():
-    user = os.getenv("POSTGRES_USER")
-    password = os.getenv("POSTGRES_PASSWORD")
-    server = os.getenv("POSTGRES_SERVER")
-    port = os.getenv("POSTGRES_PORT")
-    db = os.getenv("POSTGRES_DB")
-    return f"postgresql+psycopg://{user}:{password}@{server}:{port}/{db}"
-
 DEFAULT_ENTROPY = 32  # number of bytes to return by default
 _sysrand = SystemRandom()
 
@@ -28,7 +20,7 @@ def token_urlsafe(nbytes=None):
 
 class Settings(BaseSettings):
     API_PREFIX: str = '/api/v1'
-    POSTGRESQL_DATABASE_URI: str = get_url()
+    POSTGRESQL_DATABASE_URI: str = os.getenv("DATABASE_URL")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     SECRET_KEY: str = token_urlsafe(32)
     ALGORITHM: str = "HS256"
