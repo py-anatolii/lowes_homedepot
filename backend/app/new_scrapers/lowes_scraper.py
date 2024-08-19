@@ -156,7 +156,6 @@ class LowesScraper:
         base_url = f"https://www.lowes.com/search?searchTerm={key_word}"
         self.driver.get(f"{base_url}&inStock=1&rollUpVariants=0")
         self.toggle_button_click()
-
         time.sleep(5)
         
         page_content = self.driver.page_source
