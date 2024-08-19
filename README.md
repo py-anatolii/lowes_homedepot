@@ -32,10 +32,6 @@ This document provides step-by-step instructions to set up and run the project l
 
 ## Step 2: Set Up the Backend
 
-1. **Navigate to the Backend Directory**:
-
-## Step 2: Set Up the Backend
-
 1. **Navigate to the Backend Directory**
 
     ```bash
