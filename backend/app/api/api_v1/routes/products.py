@@ -22,7 +22,7 @@ def search_products(session: SessionDep, search_data: ProductSearch) -> Message:
     key_words = search_data.keyWord.split(',')
 
     lowes_scraper = LowesScraper()
-    home_depot_scraper = HomeDepotScraper()
+    # home_depot_scraper = HomeDepotScraper()
 
     l_store_num = 2790
     l_expected_store_name = "E. San Jose Lowe's"
@@ -31,16 +31,19 @@ def search_products(session: SessionDep, search_data: ProductSearch) -> Message:
 
     all_results = []
 
-    for key_word in key_words:
-        with ThreadPoolExecutor() as executor:
-            futures = []
-            futures.append(executor.submit(lowes_scraper.scrape_all_pages, key_word, l_store_num, l_expected_store_name))
-            futures.append(executor.submit(home_depot_scraper.scrape_all_pages, key_word, h_store_num, h_expected_store_name))
+    # for key_word in key_words:
+    #     with ThreadPoolExecutor() as executor:
+    #         futures = []
+    #         futures.append(executor.submit(lowes_scraper.scrape_all_pages, key_word, l_store_num, l_expected_store_name))
+    #         futures.append(executor.submit(home_depot_scraper.scrape_all_pages, key_word, h_store_num, h_expected_store_name))
             
-            for future in futures:
-                result = future.result()
-                if result:
-                    all_results.extend(result)
+    #         for future in futures:
+    #             result = future.result()
+    #             if result:
+    #                 all_results.extend(result)
+    for key_word in key_words:
+        lowes_result = lowes_scraper.scrape_all_pages(key_word, l_store_num, l_expected_store_name)
+        all_results.extend(lowes_result)
 
     if not all_results:
         return Message(message="No results found from both sources.")
